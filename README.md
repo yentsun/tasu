@@ -30,12 +30,14 @@ const tp = new Transport({group: 'some-service'});
 ```
 
 
-Publish a request and get a response in callback:
+Publish a request and get a response via async/await:
 
 ```js
-tp.request('some.package', {type: 'ordinary'}, (error, package) => {
-    console.log(error, package)
-});
+async () => {
+    const {bar} = await tp.request('foo', {arg: 1});
+    ...
+};
+
 ```
 _Note: this method uses `requestOne` inside, no need to worry about max  
 responses_ 
@@ -44,10 +46,9 @@ responses_
 Subscribe and respond to a request:
 
 ```js
-tp.listen('some.request', ({id}, respond) => {
-    someModule.fetch(id, (error, pack) => {
-        respond(error, pack);
-    });
+tp.listen('foo', ({arg}, respond) => {
+    ...
+    respond(error, {bar: 2});
 });
 ```
 

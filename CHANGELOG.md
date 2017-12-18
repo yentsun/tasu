@@ -1,6 +1,6 @@
-[3.0.0]
--------
-- [ ] Move to promise-based scheme
+[3.0.0] - 2017-12-19
+--------------------
+- [x] Move requests to promise-based scheme fix #1
 
 
 [2.1.2] - 2017-10-13
@@ -20,7 +20,6 @@
 
 [2.0.2] - 2017-09-28
 --------------------
-- [x] UPDATED TS bindings to match js implementation
 - [x] FIXED some typos
 
 
