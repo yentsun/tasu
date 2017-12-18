@@ -1,5 +1,5 @@
-[3.0.0]
--------
+[3.0.0] - 2017-12-19
+--------------------
 - [x] Move requests to promise-based scheme fix #1
 
 
