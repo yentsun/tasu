@@ -1,0 +1,34 @@
+{
+  "name": "yt-transport",
+  "version": "3.0.0",
+  "description": "A NATS-based message transport for Node.js services",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yentsun/transport.git"
+  },
+  "keywords": [
+    "nats"
+  ],
+  "author": "Max Korinets",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/yentsun/transport/issues"
+  },
+  "homepage": "https://github.com/yentsun/transport",
+  "dependencies": {
+    "hyperid": "^1.2.0",
+    "lodash": "^4.17.4",
+    "moment": "^2.17.1",
+    "nats": "^0.7.10",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.5.3",
+    "sinon": "^1.17.7"
+  }
+}
