@@ -81,26 +81,28 @@ module.exports = class extends EventEmitter {
     };
 
     // request one response
-    request(subject, message, done) {
+    request(subject, message) {
         const meta = JSON.parse(JSON.stringify(message));  // important to clone here, as we are rewriting meta
         const id = this._instance();
         this._logger.debug('[>>', id, '>>]', subject, meta);
-        this._nats.requestOne(subject, JSON.stringify(message), null, this._options.requestTimeout, (response) => {
-            if (response.code && response.code === nats.REQ_TIMEOUT) {
-                this._logger.error('[!!', id, '!!] timeout', subject, message);
-                return done(new Error('response timeout'));
-            }
-            response = JSON.parse(response);
-            const error = response[0];
-            const res = response[1];
-            if (error) {
-                this._logger.error('[!!', id, '!!] ', error.message, error.stack);
-                return done(new Error(error.message));
-            }
-            const meta = JSON.parse(JSON.stringify(res));
-            this._logger.debug('[<<', id, '<<]', subject, meta);
-            return done(null, res);
-        })
+        return new Promise((resolve, reject) => {
+            this._nats.requestOne(subject, JSON.stringify(message), null, this._options.requestTimeout, (response) => {
+                if (response.code && response.code === nats.REQ_TIMEOUT) {
+                    this._logger.error('[!!', id, '!!] timeout', subject, message);
+                    reject(new Error('response timeout'));
+                } else {
+                    const [error, res] = JSON.parse(response);
+                    if (error) {
+                        this._logger.error('[!!', id, '!!] ', error.message, error.stack);
+                        reject(new Error(error.message));
+                    } else {
+                        const meta = JSON.parse(JSON.stringify(res));
+                        this._logger.debug('[<<', id, '<<]', subject, meta);
+                        resolve(res);
+                    }
+                }
+            })
+        });
     };
 
     // unsubscribe from subscription by id
