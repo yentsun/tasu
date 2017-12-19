@@ -1,15 +1,15 @@
-YT-Transport
-============
+Tasu
+====
 
 A wrapper over [node-nats](https://github.com/nats-io/node-nats), designed
-to easily integrate with your code.
+to easily integrate with your code. Taşuu (ташуу) is 'transport' in Kyrgyz.
 
 
 Installation
 ------------
 
 ```
-npm install yentsun/transport
+npm i tasu
 ```
 
 Usage
@@ -18,13 +18,14 @@ Usage
 Create an instance of the wrapper:
 
 ```js
-import Transport from 'yt-transport';
+const Tasuu = require('tasu');
 
-const tp = new Transport({group: 'some-service'});
- tp.on('connect', () => {
+
+const tasu = new Tasuu({group: 'some-service'});
+ tasu.on('connect', () => {
      // wrapper is ready at this point
  });
- tp.on('error', (error) => {
+ tasu.on('error', (error) => {
      throw error;
  });
 ```
@@ -34,7 +35,7 @@ Publish a request and get a response via async/await:
 
 ```js
 async () => {
-    const {bar} = await tp.request('foo', {arg: 1});
+    const {bar} = await tasu.request('foo', {arg: 1});
     ...
 };
 
@@ -46,7 +47,7 @@ responses_
 Subscribe and respond to a request:
 
 ```js
-tp.listen('foo', ({arg}, respond) => {
+tasu.listen('foo', ({arg}, respond) => {
     ...
     respond(error, {bar: 2});
 });
@@ -58,13 +59,13 @@ _Note: a listener is automatically added to queue group `some.request.listeners`
 Publish an event:
 
 ```js
-tp.publish('some.package.sent', {...});
+tasu.publish('some.package.sent', {...});
 ```
 
 Subscribe and process as worker queue:
 
 ```js
- tp.process('*.package.sent', (pack, subject) => {
+ tasu.process('*.package.sent', (pack, subject) => {
     console.log(subject, pack);
 });
 ```
@@ -72,19 +73,19 @@ Subscribe and process as worker queue:
 `listen`, `subscribe` and `process` methods return an integer subscription ID (SID) which can be used to unsubscribe from a subject:
 
 ```js
-const sid = tp.process('*.package.sent', (pack, subject) => {
+const sid = tasu.process('*.package.sent', (pack, subject) => {
     console.log(subject, pack);
 });
 
 // ...
 
-tp.unsubscribe(sid);
+tasu.unsubscribe(sid);
 ```
 
 Close NATS connection (if needed):
 
 ```js
-tp.close();
+tasu.close();
 ```
 
 Environment variables
