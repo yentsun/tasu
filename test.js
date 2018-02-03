@@ -10,11 +10,9 @@ tp.on('error', () => {
 
 describe('wrapper', () => {
 
-    before((done) => {
-        tp.on('connect', () => {
-            nats = tp._nats;
-            done();
-        });
+    before(async () => {
+        await tp.connected();
+        nats=tp._nats;
     });
 
     describe('request', () => {

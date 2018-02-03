@@ -17,6 +17,12 @@ module.exports = class extends EventEmitter {
         this._logger = this._options.logger || Logger(this._options.group);
         this._nats = nats.connect(options);
         this._instance = hyperid();
+
+        // async style
+        this.readyPromise=new Promise(resolve => {
+            this._nats.on('connect', () => {resolve()});
+        });
+
         this._nats.on('connect', () => {
             this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
             this._logger.info('id:', this._instance());
@@ -28,6 +34,11 @@ module.exports = class extends EventEmitter {
             this.emit('error', error);
         });
 
+    }
+
+    // async style
+    connected() {
+        return this.readyPromise;
     }
 
     publish(subject, message) {
