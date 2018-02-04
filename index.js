@@ -24,6 +24,7 @@ module.exports = class extends EventEmitter {
         });
 
         this._nats.on('connect', () => {
+            this._state = 'connected';
             this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
             this._logger.info('id:', this._instance());
             this._logger.info('group:', this._options.group);
@@ -32,6 +33,19 @@ module.exports = class extends EventEmitter {
         this._nats.on('error', (error) => {
             this._logger.error(error.message);
             this.emit('error', error);
+        });
+        this._nats.on('disconnect', () => {
+            if (this._state === 'connected') {
+                this._logger.error('DISCONNECTED!');
+            }
+            this._state = 'disconnected';
+        });
+        this._nats.on('reconnecting', () => {
+            this._logger.info('reconnecting');
+        });
+        this._nats.on('reconnect', () => {
+            this._state = 'connected';
+            this._logger.info('connection RESTORED!');
         });
 
     }
@@ -67,7 +81,7 @@ module.exports = class extends EventEmitter {
     listen(subject, done) {
         const group = subject + '.listeners';
         this._logger.debug('subscribing to requests', subject, 'as member of', group);
-        return this._nats.subscribe(subject, {queue: group}, (message, reply, subject) => {
+        return this._nats.subscribe(subject, {queue: group}, (message, reply) => {
             done(JSON.parse(message), this._respond(reply))
         })
     };
