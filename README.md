@@ -15,7 +15,7 @@ npm i tasu
 Usage
 -----
 
-Create an instance of the wrapper:
+Create an instance of the transport:
 
 ```js
 const Tasuu = require('tasu');

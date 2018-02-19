@@ -2,17 +2,21 @@ const {assert} = require('chai');
 const Transport = require('./');
 
 
-const tp = new Transport({url: 'nats://localhost:4222', group: 'tests', requestTimeout: 100}); // a nats server should be running
-let nats;
+const tp = new Transport({  // a nats server should be running
+    url: 'nats://localhost:4222',
+    group: 'tests',
+    requestTimeout: 100});
 tp.on('error', () => {
     process.exit(1);
 });
+let nats;
+
 
 describe('wrapper', () => {
 
     before(async () => {
         await tp.connected();
-        nats=tp._nats;
+        nats = tp._nats;
     });
 
     describe('request', () => {
