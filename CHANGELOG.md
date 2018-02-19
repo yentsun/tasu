@@ -1,3 +1,9 @@
+[3.1.0] - 2018-02-19
+--------------------
+- [x] Add 'async style' connected state handling
+- [x] Update dependencies
+
+
 [3.0.0] - 2017-12-19
 --------------------
 - [x] Move requests to promise-based scheme fix #1
