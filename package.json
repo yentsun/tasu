@@ -1,6 +1,6 @@
 {
   "name": "tasu",
-  "version": "3.0.3",
+  "version": "3.1.1",
   "description": "A NATS-based message transport for Node.js services",
   "main": "index.js",
   "scripts": {
@@ -21,9 +21,9 @@
   "homepage": "https://github.com/yentsun/tasu",
   "dependencies": {
     "hyperid": "^1.2.0",
-    "lodash": "^4.17.4",
-    "moment": "^2.17.1",
-    "nats": "^0.7.10",
+    "lodash": "^4.17.5",
+    "moment": "^2.20.1",
+    "nats": "^0.7.29",
     "winston": "^2.3.1"
   },
   "devDependencies": {
