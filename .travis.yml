@@ -6,3 +6,7 @@ node_js:
 before_install:
   - go get github.com/nats-io/gnatsd
   - gnatsd
+
+install: npm i
+
+script: npm test
