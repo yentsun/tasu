@@ -6,7 +6,7 @@ node_js:
 
 before_install:
   - go get github.com/nats-io/gnatsd
-  - nohup gnatsd
+  - screen gnatsd
 
 install: npm i
 
