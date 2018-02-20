@@ -4,5 +4,4 @@ node_js:
   - lts
 
 services:
-  - couchdb
   - nats
