@@ -1,3 +1,4 @@
+dist: xenial
 language: node_js
 
 node_js:
@@ -5,7 +6,7 @@ node_js:
 
 before_install:
   - go get github.com/nats-io/gnatsd
-  - gnatsd
+  - nohup gnatsd
 
 install: npm i
 
