@@ -1,6 +1,8 @@
 Tasu
 ====
 
+![https://travis-ci.org/yentsun/tasu.svg?branch=master](build)
+
 A wrapper over [node-nats](https://github.com/nats-io/node-nats), designed
 to easily integrate with your code. Taşuu (ташуу) is 'transport' in Kyrgyz.
 
