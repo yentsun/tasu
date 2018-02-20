@@ -1,0 +1,13 @@
+dist: xenial
+language: node_js
+
+node_js:
+  - lts/*
+
+before_install:
+  - go get github.com/nats-io/gnatsd
+  - nohup gnatsd > /dev/null 2>&1 &
+
+install: npm i
+
+script: npm test
