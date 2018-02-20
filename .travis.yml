@@ -3,5 +3,6 @@ language: node_js
 node_js:
   - lts/*
 
-services:
-  - nats
+before_install:
+  - go get github.com/nats-io/gnatsd
+  - gnatsd
