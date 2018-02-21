@@ -1,7 +1,7 @@
 [3.1.3]
 -------
 - [x] Add more keywords to `package.json`
-- [ ] Add coveralls with nyc fix #5
+- [x] Add coveralls with nyc #5
 
 
 [3.1.0] - 2018-02-19
