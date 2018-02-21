@@ -1,11 +1,11 @@
 Tasu
 ====
 
-[![Build Status](https://travis-ci.org/yentsun/tasu.svg?branch=master)](https://travis-ci.org/yentsun/tasu)
-[![Coverage Status](https://coveralls.io/repos/github/yentsun/tasu/badge.svg?branch=master)](https://coveralls.io/github/yentsun/tasu?branch=master)
-
 A wrapper over [node-nats](https://github.com/nats-io/node-nats), designed
 to easily integrate with your code. Taşuu (ташуу) is 'transport' in Kyrgyz.
+
+[![Build Status](https://travis-ci.org/yentsun/tasu.svg?branch=master)](https://travis-ci.org/yentsun/tasu)
+[![Coverage Status](https://coveralls.io/repos/github/yentsun/tasu/badge.svg?branch=master)](https://coveralls.io/github/yentsun/tasu?branch=master)
 
 
 Installation

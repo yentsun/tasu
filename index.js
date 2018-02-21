@@ -10,6 +10,7 @@ module.exports = class extends EventEmitter {
     constructor(options) {
         super();
         const defaults = {
+            url: 'nats://localhost:4222',
             requestTimeout: 10000,
             group: 'default'
         };
@@ -17,16 +18,18 @@ module.exports = class extends EventEmitter {
         this._logger = this._options.logger || Logger(this._options.group);
         this._nats = nats.connect(options);
         this._instance = hyperid();
+        this.id = this._instance();
+        this.group = this._options.group;
 
         // async style
-        this.readyPromise=new Promise(resolve => {
-            this._nats.on('connect', () => {resolve()});
+        this.readyPromise = new Promise(resolve => {
+            this._nats.on('connect', () => {resolve()}); // TODO try to call `resolve` from general on.connect subscriber (below)
         });
 
         this._nats.on('connect', () => {
             this._state = 'connected';
             this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
-            this._logger.info('id:', this._instance());
+            this._logger.info('id:', this.id);
             this._logger.info('group:', this._options.group);
             this.emit('connect');
         });
