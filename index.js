@@ -10,6 +10,7 @@ module.exports = class extends EventEmitter {
     constructor(options) {
         super();
         const defaults = {
+            url: 'nats://localhost:4222',
             requestTimeout: 10000,
             group: 'default'
         };
@@ -17,35 +18,46 @@ module.exports = class extends EventEmitter {
         this._logger = this._options.logger || Logger(this._options.group);
         this._nats = nats.connect(options);
         this._instance = hyperid();
+        this.id = this._instance();
+        this.group = this._options.group;
 
         // async style
-        this.readyPromise=new Promise(resolve => {
-            this._nats.on('connect', () => {resolve()});
+        this.readyPromise = new Promise(resolve => {
+            this._nats.on('connect', () => {resolve()}); // TODO try to call `resolve` from general on.connect subscriber (below)
         });
 
         this._nats.on('connect', () => {
             this._state = 'connected';
             this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
-            this._logger.info('id:', this._instance());
+            this._logger.info('id:', this.id);
             this._logger.info('group:', this._options.group);
             this.emit('connect');
         });
+
         this._nats.on('error', (error) => {
-            this._logger.error(error.message);
-            this.emit('error', error);
+            this._logger.error(`${error.message}${error.code ? ' (code: '+error.code+')' : ''}`);
+            if (error.code === 'CONN_ERR') {
+                process.exit(1);
+            }
+            else
+                this.emit('error', error);
         });
+
         this._nats.on('disconnect', () => {
             if (this._state === 'connected') {
-                this._logger.error('DISCONNECTED!');
+                this._logger.error('nats disconnected');
             }
             this._state = 'disconnected';
         });
+
         this._nats.on('reconnecting', () => {
-            this._logger.info('reconnecting');
+            this._state = 'reconnecting';
+            this._logger.info('nats reconnecting');
         });
+
         this._nats.on('reconnect', () => {
             this._state = 'connected';
-            this._logger.info('connection RESTORED!');
+            this._logger.info('nats reconnected');
         });
 
     }

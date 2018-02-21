@@ -1,5 +1,10 @@
-[3.1.3]
--------
+[3.2.0] - 2018-02-22
+--------------------
+- [x] Cover code to 100% (well, 99% actually) #6
+
+
+[3.1.3] - 2018-02-22
+--------------------
 - [x] Add more keywords to `package.json`
 - [x] Add coveralls with nyc #5
 
