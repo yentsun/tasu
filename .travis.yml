@@ -10,4 +10,4 @@ before_install:
 
 install: npm i
 
-script: npm test
+script: nyc npm test && nyc report --reporter=text-lcov | coveralls

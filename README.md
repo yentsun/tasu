@@ -49,9 +49,15 @@ responses_
 Subscribe and respond to a request:
 
 ```js
-tasu.listen('foo', ({arg}, respond) => {
-    ...
-    respond(error, {bar: 2});
+tasu.listen('foo', async ({arg}, respond) => {
+    try {
+        const bar = await someAsyncFunction(arg);
+        respond(null, {bar});
+           
+    } catch (error) {
+        respond(error);
+    }
+
 });
 ```
 
