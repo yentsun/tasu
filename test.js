@@ -1,8 +1,9 @@
 const {assert} = require('chai');
 const Tasuu = require('./');
+const sinon = require('sinon');
 
 
-describe('empty constructor options', () => {
+describe('tasu: empty options', () => {
 
     const tasu = new Tasuu();
 
@@ -21,7 +22,7 @@ describe('empty constructor options', () => {
 });
 
 
-describe('tasu', () => {
+describe('tasu: options set', () => {
 
     const tasu = new Tasuu({  // a nats server should be running
         url: 'nats://localhost:4222',
@@ -99,6 +100,7 @@ describe('tasu', () => {
     });
 
     describe('subscribe', () => {
+
         it('performs a response-subscription to a subject', (done) => {
             tasu.subscribe('broadcast', (message, replyTo, subject) => {
                 assert.equal(message.foo, 'bar');
@@ -111,6 +113,7 @@ describe('tasu', () => {
     });
 
     describe('listen', () => {
+
         it('listens to requests', async () => {
             tasu.listen('request.listen', (message, respond) => {
                 assert.equal(message.foo, 'bar');
@@ -122,6 +125,7 @@ describe('tasu', () => {
     });
 
     describe('process', () => {
+
         it('process a queue message as group member', (done) => {
             tasu.process('process', (message, subject) => {
                 assert.equal(message.foo, 'bar');
@@ -133,6 +137,7 @@ describe('tasu', () => {
     });
 
     describe('publish', () => {
+
         it('publishes a message to a subject', (done) => {
             tasu.process('publish', (message) => {
                 assert.equal(message.message, 'yay!');
@@ -143,6 +148,7 @@ describe('tasu', () => {
     });
 
     describe('unsubscribe', () => {
+
         it('unsubscribes from NATS subject', (done) => {
             const sid = tasu.subscribe('unsubscribe', ()=>{});
             tasu._nats.once('unsubscribe', (subId, subject) => {
@@ -155,6 +161,7 @@ describe('tasu', () => {
     });
 
     describe('subOnce', () => {
+
         it('subscribes, gets one message and unsubscribes', (done) => {
             const sid = tasu.subOnce('subOnce', (message) => {
                 assert.equal(message.foo, 'onced'); // FIXME no assertion here
@@ -168,20 +175,55 @@ describe('tasu', () => {
         });
     });
 
-    describe('nats error', () => {
+    describe('nats error event', () => {
+
         it('emits error too', (done) => {
             tasu.on('error', (error) => {
                 assert.equal(error.message, 'synthetic error');
                 done();
             });
             try {
-                tasu._nats.emit('error', new Error('synthetic error'));
+                const error = new Error('synthetic error');
+                tasu._nats.emit('error', error);
             } catch (error) {}
 
+        });
+
+        it('exits on connection error', (done) => {
+            const sandbox = sinon.sandbox.create({useFakeTimers : true});
+            const exitStub  = sandbox.stub(process, 'exit');
+            const error = new Error('synthetic connection error');
+            error.code = 'CONN_ERR';
+            tasu._nats.emit('error', error);
+            sinon.assert.calledOnce(exitStub);
+            sandbox.restore();
+            done();
         })
     });
 
+    describe('connection events', () => {
+
+        it('handles disconnect', (done) => {
+            tasu._nats.emit('disconnect');
+            assert.equal(tasu._state, 'disconnected');
+            done();
+        });
+
+        it('handles reconnecting', (done) => {
+            tasu._nats.emit('reconnecting');
+            assert.equal(tasu._state, 'reconnecting');
+            done();
+        });
+
+        it('handles reconnect', (done) => {
+            tasu._nats.emit('reconnect');
+            assert.equal(tasu._state, 'connected');
+            done();
+        });
+    });
+
     describe('close', () => {
+
         it('closes underlying connection with NATS', (done) => {
             tasu.close();
             assert.isTrue(tasu._nats.closed);

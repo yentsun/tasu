@@ -45,18 +45,19 @@ module.exports = class extends EventEmitter {
 
         this._nats.on('disconnect', () => {
             if (this._state === 'connected') {
-                this._logger.error('DISCONNECTED!');
+                this._logger.error('nats disconnected');
             }
             this._state = 'disconnected';
         });
 
         this._nats.on('reconnecting', () => {
-            this._logger.info('reconnecting');
+            this._state = 'reconnecting';
+            this._logger.info('nats reconnecting');
         });
 
         this._nats.on('reconnect', () => {
             this._state = 'connected';
-            this._logger.info('connection RESTORED!');
+            this._logger.info('nats reconnected');
         });
 
     }
