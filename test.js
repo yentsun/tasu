@@ -1,13 +1,10 @@
 const {assert} = require('chai');
-const Taşuu = require('./');
+const Tasuu = require('./');
 
 
 describe('empty constructor options', () => {
 
-    const tasu = new Taşuu();
-    tasu.on('error', () => {
-        process.exit(1);
-    });
+    const tasu = new Tasuu();
 
     before((done) => {
         tasu.on('connect', () => {
@@ -26,13 +23,10 @@ describe('empty constructor options', () => {
 
 describe('tasu', () => {
 
-    const tasu = new Taşuu({  // a nats server should be running
+    const tasu = new Tasuu({  // a nats server should be running
         url: 'nats://localhost:4222',
         group: 'tests',
         requestTimeout: 100
-    });
-    tasu.on('error', () => {
-        process.exit(1);
     });
 
     before(async () => {
@@ -172,6 +166,19 @@ describe('tasu', () => {
                 done();
             });
         });
+    });
+
+    describe('nats error', () => {
+        it('emits error too', (done) => {
+            tasu.on('error', (error) => {
+                assert.equal(error.message, 'synthetic error');
+                done();
+            });
+            try {
+                tasu._nats.emit('error', new Error('synthetic error'));
+            } catch (error) {}
+
+        })
     });
 
     describe('close', () => {

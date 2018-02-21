@@ -33,19 +33,27 @@ module.exports = class extends EventEmitter {
             this._logger.info('group:', this._options.group);
             this.emit('connect');
         });
+
         this._nats.on('error', (error) => {
-            this._logger.error(error.message);
-            this.emit('error', error);
+            this._logger.error(`${error.message}${error.code ? ' (code: '+error.code+')' : ''}`);
+            if (error.code === 'CONN_ERR') {
+                process.exit(1);
+            }
+            else
+                this.emit('error', error);
         });
+
         this._nats.on('disconnect', () => {
             if (this._state === 'connected') {
                 this._logger.error('DISCONNECTED!');
             }
             this._state = 'disconnected';
         });
+
         this._nats.on('reconnecting', () => {
             this._logger.info('reconnecting');
         });
+
         this._nats.on('reconnect', () => {
             this._state = 'connected';
             this._logger.info('connection RESTORED!');
