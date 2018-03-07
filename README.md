@@ -4,7 +4,8 @@ Tasu
 ====
 
 A wrapper over [node-nats](https://github.com/nats-io/node-nats), designed
-to easily integrate with your code. Taşuu (ташуу) is 'transport' in Kyrgyz.
+to easily integrate with your microservice code. Taşuu (ташуу) is 'transport'
+in Kyrgyz.
 
 [![Build Status](https://travis-ci.org/yentsun/tasu.svg?branch=master)](https://travis-ci.org/yentsun/tasu)
 [![Coverage Status](https://coveralls.io/repos/github/yentsun/tasu/badge.svg?branch=master)](https://coveralls.io/github/yentsun/tasu?branch=master)
@@ -104,5 +105,10 @@ Environment variables
 
 - `NATS_LOG_LEVEL` - set wrapper's log level. Default is `debug`
 
+
+Credits
+-------
+
+Icons by [icons8](https://icons8.com)
 
 [icon]: icons8-hub-64.png
