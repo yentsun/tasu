@@ -1,3 +1,5 @@
+![icon]
+
 Tasu
 ====
 
@@ -26,7 +28,7 @@ const Tasuu = require('tasu');
 
 const tasu = new Tasuu({group: 'some-service'});
  tasu.on('connect', () => {
-     // wrapper is ready at this point
+     // transport is ready at this point
  });
  tasu.on('error', (error) => {
      throw error;
@@ -62,7 +64,7 @@ tasu.listen('foo', async ({arg}, respond) => {
 });
 ```
 
-_Note: a listener is automatically added to queue group `some.request.listeners`_
+_Note: a listener is automatically added to queue group `foo.listeners`_
 
 
 Publish an event:
@@ -101,3 +103,6 @@ Environment variables
 =====================
 
 - `NATS_LOG_LEVEL` - set wrapper's log level. Default is `debug`
+
+
+[icon]: icons8-hub-64.png
