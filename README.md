@@ -1,8 +1,11 @@
+![icon]
+
 Tasu
 ====
 
 A wrapper over [node-nats](https://github.com/nats-io/node-nats), designed
-to easily integrate with your code. Taşuu (ташуу) is 'transport' in Kyrgyz.
+to easily integrate with your microservice code. Taşuu (ташуу) is 'transport'
+in Kyrgyz.
 
 [![Build Status](https://travis-ci.org/yentsun/tasu.svg?branch=master)](https://travis-ci.org/yentsun/tasu)
 [![Coverage Status](https://coveralls.io/repos/github/yentsun/tasu/badge.svg?branch=master)](https://coveralls.io/github/yentsun/tasu?branch=master)
@@ -26,7 +29,7 @@ const Tasuu = require('tasu');
 
 const tasu = new Tasuu({group: 'some-service'});
  tasu.on('connect', () => {
-     // wrapper is ready at this point
+     // transport is ready at this point
  });
  tasu.on('error', (error) => {
      throw error;
@@ -62,7 +65,7 @@ tasu.listen('foo', async ({arg}, respond) => {
 });
 ```
 
-_Note: a listener is automatically added to queue group `some.request.listeners`_
+_Note: a listener is automatically added to queue group `foo.listeners`_
 
 
 Publish an event:
@@ -98,6 +101,14 @@ tasu.close();
 ```
 
 Environment variables
-=====================
+---------------------
 
 - `NATS_LOG_LEVEL` - set wrapper's log level. Default is `debug`
+
+
+Credits
+-------
+
+Icons by [icons8](https://icons8.com)
+
+[icon]: icons8-hub-64.png
