@@ -21,6 +21,9 @@
     "event",
     "microservices"
   ],
+  "engines": {
+    "node": ">=8.10.0"
+  },
   "author": "Max Korinets",
   "license": "UNLICENSED",
   "bugs": {

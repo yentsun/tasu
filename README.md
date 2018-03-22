@@ -101,7 +101,7 @@ tasu.close();
 ```
 
 Environment variables
-=====================
+---------------------
 
 - `NATS_LOG_LEVEL` - set wrapper's log level. Default is `debug`
 
