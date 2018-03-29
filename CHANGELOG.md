@@ -1,3 +1,8 @@
+[3.2.2] - 2018-03-30
+--------------------
+- [x] Change `nats` to `tasu` @ logger
+
+
 [3.2.1] - 2018-03-22
 --------------------
 - [x] Add `engines` to npm package
