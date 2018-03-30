@@ -3,6 +3,7 @@ const {EventEmitter} = require('events');
 const merge = require('lodash/merge');
 const hyperid = require('hyperid');
 const Logger = require('./lib/logger');
+const RequestError = require('./lib/RequestError');
 
 
 module.exports = class extends EventEmitter {
@@ -126,12 +127,12 @@ module.exports = class extends EventEmitter {
             this._nats.requestOne(subject, JSON.stringify(message), null, this._options.requestTimeout, (response) => {
                 if (response.code && response.code === nats.REQ_TIMEOUT) {
                     this._logger.error('[!!', id, '!!] timeout', subject, message);
-                    reject(new Error('response timeout'));
+                    reject(new RequestError('response timeout', id));
                 } else {
                     const [error, res] = JSON.parse(response);
                     if (error) {
                         this._logger.error('[!!', id, '!!] ', error.message, error.stack);
-                        reject(new Error(error.message));
+                        reject(new RequestError(error.message, id));
                     } else {
                         const meta = JSON.parse(JSON.stringify(res));
                         this._logger.debug('[<<', id, '<<]', subject, meta);
