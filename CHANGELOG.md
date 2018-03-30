@@ -1,3 +1,8 @@
+[3.3.0]
+-------
+- [x] Add custom error class #8
+
+
 [3.2.2] - 2018-03-30
 --------------------
 - [x] Change `nats` to `tasu` @ logger

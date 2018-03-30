@@ -74,6 +74,7 @@ describe('tasu: options set', () => {
                 await tasu.request('request.error', {foo: 'bar'});
             } catch (error) {
                 assert.equal(error.message, 'service error');
+                assert.isOk(error.requestId);
             }
         });
 
@@ -87,6 +88,7 @@ describe('tasu: options set', () => {
                 await tasu.request('request.error.detail', {foo: 'bar'});
             } catch (error) {
                 assert.equal(error.message, 'service error');
+                assert.isOk(error.requestId);
             }
         });
 
@@ -95,6 +97,7 @@ describe('tasu: options set', () => {
                 await tasu.request('request.timeout', {foo: 'bar'});
             } catch (error) {
                 assert.equal(error.message, 'response timeout');
+                assert.isOk(error.requestId);
             }
         }).timeout(110);
     });
