@@ -76,17 +76,16 @@ module.exports = class extends EventEmitter {
     };
 
     // returned by `listen`, not to be used directly
-    _respond(replyTo) {
-        return (error, response) => {
-            if (error) {
-                this._logger.debug('sending error response to', replyTo, error);
-                this._nats.publish(replyTo, JSON.stringify([{message: error.message || error.detail, stack: error.stack}]), () => {
-                    this._logger.debug('error response sent to', replyTo)
-                })
-            } else {
-                this._nats.publish(replyTo, JSON.stringify([null, response]), () => {
-                })
-            }
+    _respond(error, replyTo, response) {
+
+        if (error) {
+            this._logger.debug('sending error response to', replyTo, error);
+            this._nats.publish(replyTo, JSON.stringify([{message: error.message || error.detail, stack: error.stack}]), () => {
+                this._logger.debug('error response sent to', replyTo)
+            })
+        } else {
+            this._nats.publish(replyTo, JSON.stringify([null, response]), () => {
+            })
         }
     };
 
@@ -94,9 +93,14 @@ module.exports = class extends EventEmitter {
     listen(subject, done) {
         const group = subject + '.listeners';
         this._logger.debug('subscribing to requests', subject, 'as member of', group);
-        return this._nats.subscribe(subject, {queue: group}, (message, reply) => {
-            done(JSON.parse(message), this._respond(reply))
-        })
+        return this._nats.subscribe(subject, {queue: group}, async (message, reply) => {
+            try {
+                const result = await done(JSON.parse(message));
+                this._respond(null, reply, result);
+            } catch (error) {
+                this._respond(error, reply);
+            }
+        });
     };
 
     // subscribe to broadcasts
