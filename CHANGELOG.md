@@ -1,7 +1,8 @@
 [4.0.0]
 -------
 - [x] Remove `respond` callback from `listen`
-- [ ] Move to short-hyperid
+- [x] Move to `trid` for ids
+- [x] Formattable logger
 
 
 [3.3.0] - 2018-03-30

@@ -1,7 +1,7 @@
 const nats = require('nats');
 const {EventEmitter} = require('events');
 const merge = require('lodash/merge');
-const hyperid = require('hyperid');
+const TRID = require('trid');
 const Logger = require('./lib/logger');
 const RequestError = require('./lib/RequestError');
 
@@ -16,10 +16,10 @@ module.exports = class extends EventEmitter {
             group: 'default'
         };
         this._options = options ? merge(defaults, options) : defaults;
-        this._logger = this._options.logger || Logger(this._options.group);
+        this._logger = this._options.logger || Logger(this._options.group, this._options.formatter);
         this._nats = nats.connect(options);
-        this._instance = hyperid();
-        this.id = this._instance();
+        this._trid = new TRID({prefix: this._options.group});
+        this.id = this._trid.base();
         this.group = this._options.group;
 
         // async style
@@ -125,7 +125,7 @@ module.exports = class extends EventEmitter {
     // request one response
     request(subject, message) {
         const meta = JSON.parse(JSON.stringify(message));  // important to clone here, as we are rewriting meta
-        const id = this._instance();
+        const id = this._trid.seq();
         this._logger.debug('[>>', id, '>>]', subject, meta);
         return new Promise((resolve, reject) => {
             this._nats.requestOne(subject, JSON.stringify(message), null, this._options.requestTimeout, (response) => {
