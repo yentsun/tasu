@@ -1,5 +1,5 @@
-[4.0.0]
--------
+[4.0.0] - 2018-04-02
+--------------------
 - [x] Remove `respond` callback from `listen`
 - [x] Move to `trid` for ids
 - [x] Formattable logger
