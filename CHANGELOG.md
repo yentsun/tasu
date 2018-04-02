@@ -1,3 +1,9 @@
+[4.0.1] - 2018-04-02
+--------------------
+- [x] Fix error detail tests
+- [x] Drop `moment` dependency
+
+
 [4.0.0] - 2018-04-02
 --------------------
 - [x] Remove `respond` callback from `listen`
