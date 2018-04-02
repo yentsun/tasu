@@ -1,7 +1,7 @@
 const nats = require('nats');
 const {EventEmitter} = require('events');
 const merge = require('lodash/merge');
-const hyperid = require('hyperid');
+const TRID = require('trid');
 const Logger = require('./lib/logger');
 const RequestError = require('./lib/RequestError');
 
@@ -16,10 +16,10 @@ module.exports = class extends EventEmitter {
             group: 'default'
         };
         this._options = options ? merge(defaults, options) : defaults;
-        this._logger = this._options.logger || Logger(this._options.group);
+        this._logger = this._options.logger || Logger(this._options.group, this._options.formatter);
         this._nats = nats.connect(options);
-        this._instance = hyperid();
-        this.id = this._instance();
+        this._trid = new TRID({prefix: this._options.group});
+        this.id = this._trid.base();
         this.group = this._options.group;
 
         // async style
@@ -76,17 +76,16 @@ module.exports = class extends EventEmitter {
     };
 
     // returned by `listen`, not to be used directly
-    _respond(replyTo) {
-        return (error, response) => {
-            if (error) {
-                this._logger.debug('sending error response to', replyTo, error);
-                this._nats.publish(replyTo, JSON.stringify([{message: error.message || error.detail, stack: error.stack}]), () => {
-                    this._logger.debug('error response sent to', replyTo)
-                })
-            } else {
-                this._nats.publish(replyTo, JSON.stringify([null, response]), () => {
-                })
-            }
+    _respond(error, replyTo, response) {
+
+        if (error) {
+            this._logger.debug('sending error response to', replyTo, error);
+            this._nats.publish(replyTo, JSON.stringify([{message: error.message || error.detail, stack: error.stack}]), () => {
+                this._logger.debug('error response sent to', replyTo)
+            })
+        } else {
+            this._nats.publish(replyTo, JSON.stringify([null, response]), () => {
+            })
         }
     };
 
@@ -94,9 +93,14 @@ module.exports = class extends EventEmitter {
     listen(subject, done) {
         const group = subject + '.listeners';
         this._logger.debug('subscribing to requests', subject, 'as member of', group);
-        return this._nats.subscribe(subject, {queue: group}, (message, reply) => {
-            done(JSON.parse(message), this._respond(reply))
-        })
+        return this._nats.subscribe(subject, {queue: group}, async (message, reply) => {
+            try {
+                const result = await done(JSON.parse(message));
+                this._respond(null, reply, result);
+            } catch (error) {
+                this._respond(error, reply);
+            }
+        });
     };
 
     // subscribe to broadcasts
@@ -121,7 +125,7 @@ module.exports = class extends EventEmitter {
     // request one response
     request(subject, message) {
         const meta = JSON.parse(JSON.stringify(message));  // important to clone here, as we are rewriting meta
-        const id = this._instance();
+        const id = this._trid.seq();
         this._logger.debug('[>>', id, '>>]', subject, meta);
         return new Promise((resolve, reject) => {
             this._nats.requestOne(subject, JSON.stringify(message), null, this._options.requestTimeout, (response) => {

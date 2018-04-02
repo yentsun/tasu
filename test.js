@@ -37,20 +37,22 @@ describe('tasu: options set', () => {
     describe('request', () => {
 
         before((done) => {
-            tasu.listen('request.ok', (message, respond) => {
-                respond(null, message);
+            tasu.listen('request.ok', (message) => {
+                return message;
             });
-            tasu.listen('request.password', (message, respond) => {
-                respond(null, message);
+            tasu.listen('request.password', (message) => {
+                return message;
             });
-            tasu.listen('request.error', (message, respond) => {
-                respond(new Error('service error'));
+            tasu.listen('request.error', (message) => {
+                throw Error('service error');
             });
-            tasu.listen('request.empty', (message, respond) => {
-                respond(null, null);
+            tasu.listen('request.empty', (message) => {
+                return null;
             });
-            tasu.listen('request.error.detail', (message, respond) => {
-                respond({detail: 'service error'}, null);
+            tasu.listen('request.error.detail', (message) => {
+                const error = Error('service error');
+                error.detail = 'error detail';
+                throw error;
             });
             done();
         });
@@ -117,14 +119,20 @@ describe('tasu: options set', () => {
 
     describe('listen', () => {
 
-        it('listens to requests', async () => {
-            tasu.listen('request.listen', (message, respond) => {
+        function timeout(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        it('listens and responds ok', async () => {
+
+            tasu.listen('request.listen', async (message) => {
                 assert.equal(message.foo, 'bar');
-                respond(null, {bar: 'foo'});
+                await timeout(5);
+                return {bar: 'foo'};
             });
             const {bar} = await tasu.request('request.listen', {foo: 'bar'});
             assert.equal(bar, 'foo');
-        })
+        });
     });
 
     describe('process', () => {
