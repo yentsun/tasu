@@ -52,6 +52,7 @@ describe('tasu: options set', () => {
             tasu.listen('request.error.detail', (message) => {
                 const error = Error('service error');
                 error.detail = 'error detail';
+                delete error.message;
                 throw error;
             });
             done();
@@ -89,7 +90,7 @@ describe('tasu: options set', () => {
             try {
                 await tasu.request('request.error.detail', {foo: 'bar'});
             } catch (error) {
-                assert.equal(error.message, 'service error');
+                assert.equal(error.message, 'error detail');
                 assert.isOk(error.requestId);
             }
         });
