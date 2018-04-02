@@ -54,18 +54,15 @@ Subscribe and respond to a request:
 
 ```js
 tasu.listen('foo', async ({arg}, respond) => {
-    try {
-        const bar = await someAsyncFunction(arg);
-        respond(null, {bar});
-           
-    } catch (error) {
-        respond(error);
-    }
 
+    const bar = await someAsyncFunction(arg);
+    return {bar};
 });
 ```
 
-_Note: a listener is automatically added to queue group `foo.listeners`_
+
+_Note: A listener is automatically added to queue group `foo.listeners`;
+errors of the handling function are caught and sent back as error response_
 
 
 Publish an event:
