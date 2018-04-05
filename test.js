@@ -122,7 +122,7 @@ describe('tasu: options set', () => {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        it('listens and responds ok', async () => {
+        it('responds with object', async () => {
 
             tasu.listen('request.listen', async (message) => {
                 assert.equal(message.foo, 'bar');
@@ -132,11 +132,22 @@ describe('tasu: options set', () => {
             const {bar} = await tasu.request('request.listen', {foo: 'bar'});
             assert.equal(bar, 'foo');
         });
+
+        it('responds with number', async () => {
+
+            tasu.listen('request.listen.number', async (message) => {
+                await timeout(5);
+                return 5;
+            });
+            const bar = await tasu.request('request.listen.number');
+            assert.strictEqual(bar, 5);
+        });
+
     });
 
     describe('process', () => {
 
-        it('process a queue message as group member', (done) => {
+        it('processes a queue message as group member', (done) => {
             tasu.process('process', (message, subject) => {
                 assert.equal(message.foo, 'bar');
                 assert.equal(subject, 'process');
