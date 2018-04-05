@@ -1,3 +1,10 @@
+[4.1.0]
+-------
+- [x] throw errors instead of emitting
+- [x] drop `EventEmitter` extension
+- [ ] fix documentation #7
+
+
 [4.0.1] - 2018-04-02
 --------------------
 - [x] Fix error detail tests

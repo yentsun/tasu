@@ -1,50 +1,50 @@
 const nats = require('nats');
-const {EventEmitter} = require('events');
 const merge = require('lodash/merge');
 const TRID = require('trid');
 const Logger = require('./lib/logger');
 const RequestError = require('./lib/RequestError');
 
 
-module.exports = class extends EventEmitter {
+module.exports = class {
 
     constructor(options) {
-        super();
+
         const defaults = {
             url: 'nats://localhost:4222',
             requestTimeout: 10000,
-            group: 'default'
+            group: 'default',
         };
         this._options = options ? merge(defaults, options) : defaults;
-        this._logger = this._options.logger || Logger(this._options.group, this._options.formatter);
+        const {group, formatter, level} = this._options;
+        this._logger = this._options.logger || Logger({group, formatter, level});
         this._nats = nats.connect(options);
         this._trid = new TRID({prefix: this._options.group});
         this.id = this._trid.base();
         this.group = this._options.group;
 
-        // async style
         this.readyPromise = new Promise(resolve => {
-            this._nats.on('connect', () => {resolve()}); // TODO try to call `resolve` from general on.connect subscriber (below)
-        });
 
-        this._nats.on('connect', () => {
-            this._state = 'connected';
-            this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
-            this._logger.info('id:', this.id);
-            this._logger.info('group:', this._options.group);
-            this.emit('connect');
+            this._nats.on('connect', () => {
+                this._state = 'connected';
+                this._logger.info('connected to NATS server:', this._nats.currentServer.url.host);
+                this._logger.info('id:', this.id);
+                this._logger.info('group:', this._options.group);
+                resolve()
+            });
         });
 
         this._nats.on('error', (error) => {
+
             this._logger.error(`${error.message}${error.code ? ' (code: '+error.code+')' : ''}`);
             if (error.code === 'CONN_ERR') {
                 process.exit(1);
             }
             else
-                this.emit('error', error);
+                throw error;
         });
 
         this._nats.on('disconnect', () => {
+
             if (this._state === 'connected') {
                 this._logger.error('nats disconnected');
             }
@@ -52,30 +52,36 @@ module.exports = class extends EventEmitter {
         });
 
         this._nats.on('reconnecting', () => {
+
             this._state = 'reconnecting';
             this._logger.info('nats reconnecting');
         });
 
         this._nats.on('reconnect', () => {
+
             this._state = 'connected';
             this._logger.info('nats reconnected');
         });
-
     }
 
-    // async style
+
     connected() {
+
         return this.readyPromise;
     }
 
+
     publish(subject, message) {
+
         this._logger.debug('publishing to', subject, message);
         this._nats.publish(subject, JSON.stringify(message), () => {
             this._logger.debug('message published', subject, message)
         })
     };
 
+
     // returned by `listen`, not to be used directly
+
     _respond(error, replyTo, response) {
 
         if (error) {
@@ -89,8 +95,11 @@ module.exports = class extends EventEmitter {
         }
     };
 
+
     // subscribe to point-to-point requests
+
     listen(subject, done) {
+
         const group = subject + '.listeners';
         this._logger.debug('subscribing to requests', subject, 'as member of', group);
         return this._nats.subscribe(subject, {queue: group}, async (message, reply) => {
@@ -103,8 +112,11 @@ module.exports = class extends EventEmitter {
         });
     };
 
+
     // subscribe to broadcasts
+
     subscribe(subject, done) {
+
         this._logger.debug('subscribing to broadcasts', subject);
         return this._nats.subscribe(subject, (message, replyTo, subject) => {
             this._logger.debug('got broadcast', subject, message);
@@ -112,8 +124,11 @@ module.exports = class extends EventEmitter {
         })
     };
 
+
     // subscribe as queue worker
+
     process(subject, done) {
+
         const group = subject + '.workers.' + this._options.group;
         this._logger.debug('subscribing to process', subject, 'queue as member of', group);
         return this._nats.subscribe(subject, {queue: group}, (message, reply, subject) => {
@@ -122,8 +137,11 @@ module.exports = class extends EventEmitter {
         })
     };
 
+
     // request one response
+
     request(subject, message) {
+
         const meta = JSON.parse(JSON.stringify(message));  // important to clone here, as we are rewriting meta
         const id = this._trid.seq();
         this._logger.debug('[>>', id, '>>]', subject, meta);
@@ -147,14 +165,20 @@ module.exports = class extends EventEmitter {
         });
     };
 
+
     // unsubscribe from subscription by id
+
     unsubscribe(sid) {
+
         this._logger.debug(`unsubscribing from ${sid}`);
         this._nats.unsubscribe(sid);
     };
 
+
     // subscribe, receive, unsubscribe
+
     subOnce(subject, done) {
+
         this._logger.debug(`subscribing once to ${subject}...`);
         const sid = this._nats.subscribe(subject, (message, replyTo, subject) => {
             this._logger.debug('got message', subject, message, '- unsubscribing from', sid);
@@ -164,7 +188,9 @@ module.exports = class extends EventEmitter {
         return sid;
     }
 
+
     // close underlying connection with NATS
+
     close() {
         this._logger.info('closing connection with NATS:', this._nats.currentServer.url.host);
         this._nats.close();

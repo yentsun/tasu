@@ -7,10 +7,8 @@ describe('tasu: empty options', () => {
 
     const tasu = new Tasuu();
 
-    before((done) => {
-        tasu.on('connect', () => {
-            done();
-        });
+    before(async () => {
+        await tasu.connected();
     });
 
     it('runs ok', (done) => {
@@ -189,15 +187,14 @@ describe('tasu: options set', () => {
 
     describe('nats error event', () => {
 
-        it('emits error too', (done) => {
-            tasu.on('error', (error) => {
-                assert.equal(error.message, 'synthetic error');
-                done();
-            });
+        it('trows error', (done) => {
             try {
                 const error = new Error('synthetic error');
                 tasu._nats.emit('error', error);
-            } catch (error) {}
+            } catch (error) {
+                assert.equal(error.message, 'synthetic error');
+                done()
+            }
 
         });
 
