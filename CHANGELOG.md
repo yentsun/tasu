@@ -1,5 +1,5 @@
-[4.1.0]
--------
+[4.1.0] - 2018-04-05
+--------------------
 - [x] Throw errors instead of emitting
 - [x] Drop `EventEmitter` extension
 - [x] Fix documentation #7
