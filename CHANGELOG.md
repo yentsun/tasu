@@ -1,3 +1,12 @@
+[4.1.0] - 2018-04-05
+--------------------
+- [x] Throw errors instead of emitting
+- [x] Drop `EventEmitter` extension
+- [x] Fix documentation #7
+- [x] Remove formatter from logger options
+- [x] Allow `request(subject)` without messages
+
+
 [4.0.1] - 2018-04-02
 --------------------
 - [x] Fix error detail tests

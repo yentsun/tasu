@@ -1,10 +1,11 @@
 {
   "name": "tasu",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "description": "A NATS-based message transport for Node.js services",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "nats": "export GOPATH=$HOME/go && export PATH=$PATH:$GOPATH/bin && gnatsd -DV"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,7 @@
     "microservices"
   ],
   "engines": {
-    "node": ">=8.11.0"
+    "node": "lts"
   },
   "author": "Max Korinets",
   "license": "UNLICENSED",
