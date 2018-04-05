@@ -16,7 +16,7 @@ module.exports = class {
         };
         this._options = options ? merge(defaults, options) : defaults;
         const {group, formatter, level} = this._options;
-        this._logger = this._options.logger || Logger({group, formatter, level});
+        this._logger = this._options.logger || Logger({group, level});
         this._nats = nats.connect(options);
         this._trid = new TRID({prefix: this._options.group});
         this.id = this._trid.base();
@@ -140,7 +140,7 @@ module.exports = class {
 
     // request one response
 
-    request(subject, message) {
+    request(subject, message={}) {
 
         const meta = JSON.parse(JSON.stringify(message));  // important to clone here, as we are rewriting meta
         const id = this._trid.seq();
