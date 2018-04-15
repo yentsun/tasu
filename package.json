@@ -34,7 +34,7 @@
   "dependencies": {
     "lodash": "^4.17.5",
     "nats": "^0.7.29",
-    "trid": "^0.1.0",
+    "trid": "^0.1.1",
     "winston": "^2.4.1"
   },
   "devDependencies": {
