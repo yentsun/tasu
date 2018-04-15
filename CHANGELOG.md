@@ -1,3 +1,8 @@
+[4.1.1] - 2018-04-15
+--------------------
+- [x] Update `trid` version
+
+
 [4.1.0] - 2018-04-05
 --------------------
 - [x] Throw errors instead of emitting
