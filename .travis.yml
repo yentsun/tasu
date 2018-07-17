@@ -1,8 +1,11 @@
 dist: xenial
-language: node_js
+language: go
 
 node_js:
   - lts/*
+
+go:
+  - "1.9"
 
 before_install:
   - go get github.com/nats-io/gnatsd
@@ -10,4 +13,4 @@ before_install:
 
 install: npm i
 
-script: nyc npm test && nyc report --reporter=text-lcov | coveralls
+script: node_modules/.bin/nyc npm test && node_modules/.bin/nyc report --reporter=text-lcov | node_modules/.bin/coveralls
