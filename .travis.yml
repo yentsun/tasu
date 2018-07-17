@@ -5,7 +5,7 @@ node_js:
   - lts/*
 
 go:
-  - "1.8"
+  - "1.9"
 
 before_install:
   - go get github.com/nats-io/gnatsd
