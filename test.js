@@ -185,7 +185,7 @@ describe('tasu: options set', () => {
 
         it('subscribes, gets one message and unsubscribes', (done) => {
             const sid = tasu.subOnce('subOnce', (message) => {
-                assert.equal(message.foo, 'onced'); // FIXME no assertion here
+                assert.equal(message.foo, 'once');
             });
             tasu.publish('subOnce', {foo: 'once'});
             tasu._nats.once('unsubscribe', (subId, subject) => {
