@@ -1,3 +1,9 @@
+[4.2.1] - 2018-07-17
+--------------------
+- [x] Increase Go version to 1.9
+- [x] Fix vulnerabilities
+
+
 [4.1.1] - 2018-04-15
 --------------------
 - [x] Update `trid` version
