@@ -23,7 +23,7 @@
     "microservices"
   ],
   "engines": {
-    "node": "lts"
+    "node" : ">=8.11.3"
   },
   "author": "Max Korinets",
   "license": "UNLICENSED",
