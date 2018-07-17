@@ -84,7 +84,7 @@ const sid = tasu.process('*.package.sent', (pack, subject) => {
 
 tasu.unsubscribe(sid);
 ```
-The above technique is usefult for websokect connections.
+The above technique is useful for websocket connections.
 
 
 Close NATS connection (if needed):
