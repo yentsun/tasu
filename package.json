@@ -32,16 +32,16 @@
   },
   "homepage": "https://github.com/yentsun/tasu",
   "dependencies": {
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.10",
     "nats": "^0.7.29",
     "trid": "^0.1.1",
-    "winston": "^2.4.1"
+    "winston": "^2.4.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "coveralls": "^3.0.0",
-    "mocha": "^3.5.3",
-    "nyc": "^11.6.0",
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^11.9.0",
     "sinon": "^1.17.7"
   }
 }
