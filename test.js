@@ -11,6 +11,10 @@ describe('tasu: empty options', () => {
         await tasu.connected();
     });
 
+    after(async () => {
+        tasu.close();
+    });
+
     it('runs ok', (done) => {
         assert.isOk(tasu.id);
         assert.equal(tasu.group, 'default');
