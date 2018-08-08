@@ -1,7 +1,7 @@
 {
   "name": "tasu",
-  "version": "4.2.2",
-  "description": "A NATS-based message transport for Node.js services",
+  "version": "4.2.3",
+  "description": "A NATS-based async/await rpc/pub-sub message transport for Node.js services",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
@@ -20,7 +20,9 @@
     "pubsub",
     "pub/sub",
     "event",
-    "microservices"
+    "microservices",
+    "rpc",
+    "async/await"
   ],
   "engines": {
     "node": ">=8.11.3"
