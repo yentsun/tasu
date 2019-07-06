@@ -1,5 +1,4 @@
 const nats = require('nats');
-const merge = require('lodash/merge');
 const TRID = require('trid');
 const Logger = require('./lib/logger');
 const RequestError = require('./lib/RequestError');
@@ -14,8 +13,8 @@ module.exports = class {
             requestTimeout: 10000,
             group: 'default',
         };
-        this._options = options ? merge(defaults, options) : defaults;
-        const {group, formatter, level} = this._options;
+        this._options = {...defaults, ...options};
+        const {group, level} = this._options;
         this._logger = this._options.logger || Logger({group, level});
         this._nats = nats.connect(options);
         this._trid = new TRID({prefix: this._options.group});
