@@ -27,7 +27,7 @@
     "async/await"
   ],
   "engines": {
-    "node": ">=8.11.3"
+    "node": ">=10.16.0"
   },
   "author": "Max Korinets",
   "license": "UNLICENSED",
@@ -36,18 +36,17 @@
   },
   "homepage": "https://github.com/yentsun/tasu",
   "dependencies": {
-    "lodash": "^4.17.11",
-    "nats": "^0.7.29",
+    "nats": "^1.3.0",
     "trid": "^0.1.1",
-    "winston": "^2.4.3",
-    "snyk": "^1.189.0"
+    "winston": "^2.4.4"
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "coveralls": "^3.0.2",
+    "coveralls": "^3.0.4",
     "mocha": "^5.2.0",
-    "nyc": "^11.9.0",
-    "sinon": "^1.17.7"
+    "nyc": "^14.1.1",
+    "sinon": "^1.17.7",
+    "snyk": "^1.192.3"
   },
   "snyk": true
 }

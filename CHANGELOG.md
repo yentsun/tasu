@@ -1,3 +1,10 @@
+[4.3.0]
+-------
+- [x] Drop `lodash.merge` dependency
+- [x] Bump `nats` version to 1.3.0
+- [x] Bump Go version to 1.11 (for test NATS process)
+
+
 [4.2.1] - 2018-07-17
 --------------------
 - [x] Increase Go version to 1.9
