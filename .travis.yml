@@ -9,8 +9,8 @@ go:
 
 before_install:
   - go get github.com/nats-io/nats-server
-  - nohup gnatsd > /dev/null 2>&1 &
+  - nohup nats-server > /dev/null 2>&1 &
 
-install: npm i
+install: npm ci
 
 script: node_modules/.bin/nyc npm test && node_modules/.bin/nyc report --reporter=text-lcov | node_modules/.bin/coveralls
