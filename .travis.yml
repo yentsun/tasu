@@ -2,15 +2,15 @@ dist: xenial
 language: go
 
 node_js:
-  - lts/*
+  - 12
 
 go:
-  - "1.11"
+  - "1.13.10"
 
 before_install:
-  - go get github.com/nats-io/gnatsd
-  - nohup gnatsd > /dev/null 2>&1 &
+  - go get github.com/nats-io/nats-server
+  - nohup nats-server > /dev/null 2>&1 &
 
-install: npm i
+install: npm ci
 
 script: node_modules/.bin/nyc npm test && node_modules/.bin/nyc report --reporter=text-lcov | node_modules/.bin/coveralls

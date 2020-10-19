@@ -1,3 +1,8 @@
+[4.3.1] - 2020-10-19
+--------------------
+- [x] Update dependencies
+
+
 [4.3.0] - 2019-07-06
 --------------------
 - [x] Drop `lodash.merge` dependency
