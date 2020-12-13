@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 14.x ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Intstall NPM dependencies
+        run: npm ci
+
+      - name: Launch nats-server
+        env:
+          NATS_VERSION: v2.1.7
+        run: |
+          wget "https://github.com/aricart/wsgnatsd/releases/download/v0.8.4/nats-server-$NATS_VERSION-linux-amd64.zip" -O tmp.zip
+          unzip tmp.zip
+          mv nats-server-$NATS_VERSION-linux-amd64 nats-server
+          ./nats-server/nats-server &
+
+      - name: Run tests with coverage
+        env:
+          COVERALLS_REPO_TOKEN: AdzUCvP7wdydpAXm7edpJyBTLwbJ1Qxb6
+          NODE_ENV: ci
+        run: ./node_modules/.bin/c8 npm test && ./node_modules/.bin/c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls
