@@ -1,6 +1,6 @@
 {
   "name": "tasu",
-  "version": "4.3.1",
+  "version": "5.0.0",
   "description": "A NATS-based request/pub-sub message transport for Node.js services",
   "main": "index.js",
   "scripts": {
