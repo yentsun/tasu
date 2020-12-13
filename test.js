@@ -1,4 +1,4 @@
-const {assert} = require('chai');
+const assert = require('assert');
 const Tasuu = require('./');
 const sinon = require('sinon');
 
@@ -16,8 +16,8 @@ describe('tasu: empty options', () => {
     });
 
     it('runs ok', (done) => {
-        assert.isOk(tasu.id);
-        assert.equal(tasu.group, 'default');
+        assert.ok(tasu.id);
+        assert.strictEqual(tasu.group, 'default');
         done();
     });
 
@@ -45,13 +45,13 @@ describe('tasu: options set', () => {
             tasu.listen('request.password', (message) => {
                 return message;
             });
-            tasu.listen('request.error', (message) => {
+            tasu.listen('request.error', () => {
                 throw Error('service error');
             });
-            tasu.listen('request.empty', (message) => {
+            tasu.listen('request.empty', () => {
                 return null;
             });
-            tasu.listen('request.error.detail', (message) => {
+            tasu.listen('request.error.detail', () => {
                 const error = Error('service error');
                 error.detail = 'error detail';
                 delete error.message;
@@ -62,7 +62,7 @@ describe('tasu: options set', () => {
 
         it('performs a request and returns successful result', async () => {
             const {foo} = await tasu.request('request.ok', {foo: 'bar'});
-            assert.equal(foo, 'bar');
+            assert.strictEqual(foo, 'bar');
         });
 
         it('performs a request and screens password field in logs', async () => {
@@ -70,39 +70,39 @@ describe('tasu: options set', () => {
                 password: 'should not see this',
                 data: {password: 'should not see this also'}
                 });
-            assert.equal(response.password, 'should not see this');
-            assert.equal(response.data.password, 'should not see this also');
+            assert.strictEqual(response.password, 'should not see this');
+            assert.strictEqual(response.data.password, 'should not see this also');
         });
 
         it('performs a request and returns error', async () => {
             try {
                 await tasu.request('request.error', {foo: 'bar'});
             } catch (error) {
-                assert.equal(error.message, 'service error');
-                assert.isOk(error.requestId);
+                assert.strictEqual(error.message, 'service error');
+                assert.ok(error.requestId);
             }
         });
 
         it('performs a request and returns an empty response', async () => {
-            const response = await tasu.request('request.empty', {foo: 'bar'});
-            assert.isNull(response);
+            const response = await tasu.request('request.empty', { foo: 'bar' });
+            assert.strictEqual(response, null);
         });
 
         it('performs a request and returns error from error.detail', async () => {
             try {
-                await tasu.request('request.error.detail', {foo: 'bar'});
+                await tasu.request('request.error.detail', { foo: 'bar' });
             } catch (error) {
-                assert.equal(error.message, 'error detail');
-                assert.isOk(error.requestId);
+                assert.strictEqual(error.message, 'error detail');
+                assert.ok(error.requestId);
             }
         });
 
         it('performs a request and returns timeout error', async () => {
             try {
-                await tasu.request('request.timeout', {foo: 'bar'});
+                await tasu.request('request.timeout', { foo: 'bar' });
             } catch (error) {
-                assert.equal(error.message, 'response timeout');
-                assert.isOk(error.requestId);
+                assert.strictEqual(error.message, 'response timeout');
+                assert.ok(error.requestId);
             }
         }).timeout(110);
     });
@@ -111,9 +111,9 @@ describe('tasu: options set', () => {
 
         it('performs a response-subscription to a subject', (done) => {
             tasu.subscribe('broadcast', (message, replyTo, subject) => {
-                assert.equal(message.foo, 'bar');
-                assert.isNotOk(replyTo);
-                assert.equal(subject, 'broadcast');
+                assert.strictEqual(message.foo, 'bar');
+                assert.ok(! replyTo);
+                assert.strictEqual(subject, 'broadcast');
                 done()
             });
             tasu.publish('broadcast', {foo: 'bar'});
@@ -129,12 +129,12 @@ describe('tasu: options set', () => {
         it('responds with object', async () => {
 
             tasu.listen('request.listen', async (message) => {
-                assert.equal(message.foo, 'bar');
+                assert.strictEqual(message.foo, 'bar');
                 await timeout(5);
                 return {bar: 'foo'};
             });
             const {bar} = await tasu.request('request.listen', {foo: 'bar'});
-            assert.equal(bar, 'foo');
+            assert.strictEqual(bar, 'foo');
         });
 
         it('responds with number', async () => {
@@ -153,8 +153,8 @@ describe('tasu: options set', () => {
 
         it('processes a queue message as group member', (done) => {
             tasu.process('process', (message, subject) => {
-                assert.equal(message.foo, 'bar');
-                assert.equal(subject, 'process');
+                assert.strictEqual(message.foo, 'bar');
+                assert.strictEqual(subject, 'process');
                 done()
             });
             tasu.publish('process', {foo: 'bar'});
@@ -165,7 +165,7 @@ describe('tasu: options set', () => {
 
         it('publishes a message to a subject', (done) => {
             tasu.process('publish', (message) => {
-                assert.equal(message.message, 'yay!');
+                assert.strictEqual(message.message, 'yay!');
                 done();
             });
             tasu.publish('publish', {message: 'yay!'});
@@ -177,8 +177,8 @@ describe('tasu: options set', () => {
         it('unsubscribes from NATS subject', (done) => {
             const sid = tasu.subscribe('unsubscribe', ()=>{});
             tasu._nats.once('unsubscribe', (subId, subject) => {
-                assert.equal(subId, sid);
-                assert.equal(subject, 'unsubscribe');
+                assert.strictEqual(subId, sid);
+                assert.strictEqual(subject, 'unsubscribe');
                 done();
             });
             tasu.unsubscribe(sid);
@@ -189,12 +189,12 @@ describe('tasu: options set', () => {
 
         it('subscribes, gets one message and unsubscribes', (done) => {
             const sid = tasu.subOnce('subOnce', (message) => {
-                assert.equal(message.foo, 'once');
+                assert.strictEqual(message.foo, 'once');
             });
             tasu.publish('subOnce', {foo: 'once'});
             tasu._nats.once('unsubscribe', (subId, subject) => {
-                assert.equal(subId, sid);
-                assert.equal(subject, 'subOnce');
+                assert.strictEqual(subId, sid);
+                assert.strictEqual(subject, 'subOnce');
                 done();
             });
         });
@@ -207,7 +207,7 @@ describe('tasu: options set', () => {
                 const error = new Error('synthetic error');
                 tasu._nats.emit('error', error);
             } catch (error) {
-                assert.equal(error.message, 'synthetic error');
+                assert.strictEqual(error.message, 'synthetic error');
                 done()
             }
 
@@ -229,19 +229,19 @@ describe('tasu: options set', () => {
 
         it('handles disconnect', (done) => {
             tasu._nats.emit('disconnect');
-            assert.equal(tasu._state, 'disconnected');
+            assert.strictEqual(tasu._state, 'disconnected');
             done();
         });
 
         it('handles reconnecting', (done) => {
             tasu._nats.emit('reconnecting');
-            assert.equal(tasu._state, 'reconnecting');
+            assert.strictEqual(tasu._state, 'reconnecting');
             done();
         });
 
         it('handles reconnect', (done) => {
             tasu._nats.emit('reconnect');
-            assert.equal(tasu._state, 'connected');
+            assert.strictEqual(tasu._state, 'connected');
             done();
         });
     });
@@ -250,7 +250,7 @@ describe('tasu: options set', () => {
 
         it('closes underlying connection with NATS', (done) => {
             tasu.close();
-            assert.isTrue(tasu._nats.closed);
+            assert(tasu._nats.closed);
             done();
         })
     });

@@ -1,3 +1,9 @@
+[5.0.0]
+-------
+- [ ] Move to ESM modules #28
+- [x] Drop `chai` dependency
+
+
 [4.3.1] - 2020-10-19
 --------------------
 - [x] Update dependencies
