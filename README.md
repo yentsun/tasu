@@ -3,7 +3,7 @@
 Tasu
 ====
 
-[![Build Status](https://travis-ci.org/yentsun/tasu.svg?branch=master)](https://travis-ci.org/yentsun/tasu)
+![Tests status](https://github.com/yentsun/tasu/workflows/Tests/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/yentsun/tasu/badge.svg?branch=master)](https://coveralls.io/github/yentsun/tasu?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/yentsun/tasu/badge.svg?targetFile=package.json)](https://snyk.io/test/github/yentsun/tasu?targetFile=package.json)
 
