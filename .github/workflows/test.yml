@@ -36,6 +36,6 @@ jobs:
 
       - name: Run tests with coverage
         env:
-          COVERALLS_REPO_TOKEN: AdzUCvP7wdydpAXm7edpJyBTLwbJ1Qxb6
+          COVERALLS_REPO_TOKEN: dYBq1JI4E9Pj6mq1tNIird0mZzgrNIaEM
           NODE_ENV: ci
         run: ./node_modules/.bin/c8 npm test && ./node_modules/.bin/c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls
