@@ -4,7 +4,7 @@
   "description": "A NATS-based request/pub-sub message transport for Node.js services",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --experimental-specifier-resolution=node",
     "nats": "nats-server",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
@@ -26,8 +26,9 @@
     "rpc"
   ],
   "engines": {
-    "node": ">=v14.15.0"
+    "node": ">= 14.15.0"
   },
+  "type": "module",
   "author": "Maksim Korinets",
   "license": "UNLICENSED",
   "bugs": {
@@ -45,7 +46,7 @@
     "mocha": "^7.2.0",
     "nyc": "^14.1.1",
     "sinon": "^1.17.7",
-    "snyk": "^1.415.0"
+    "snyk": "^1.436.0"
   },
   "snyk": true
 }

@@ -1,6 +1,6 @@
 [5.0.0]
 -------
-- [ ] Move to ESM modules #28
+- [x] Move to ESM modules #28
 - [x] Drop `chai` dependency
 
 

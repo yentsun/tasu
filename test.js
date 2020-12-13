@@ -1,6 +1,6 @@
-const assert = require('assert');
-const Tasuu = require('./');
-const sinon = require('sinon');
+import assert  from 'assert';
+import Tasuu from './';
+import sinon from 'sinon';
 
 
 describe('tasu: empty options', () => {
@@ -20,7 +20,6 @@ describe('tasu: empty options', () => {
         assert.strictEqual(tasu.group, 'default');
         done();
     });
-
 });
 
 

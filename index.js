@@ -1,10 +1,10 @@
-const nats = require('nats');
-const TRID = require('trid');
-const Logger = require('./lib/logger');
-const RequestError = require('./lib/RequestError');
+import nats from 'nats';
+import TRID from 'trid';
+import Logger from './lib/logger';
+import RequestError from './lib/RequestError';
 
 
-module.exports = class {
+export default class {
 
     constructor(options) {
 
