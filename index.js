@@ -101,9 +101,9 @@ export default class {
 
         const group = subject + '.listeners';
         this._logger.debug('subscribing to requests', subject, 'as member of', group);
-        return this._nats.subscribe(subject, {queue: group}, async (message, reply) => {
+        return this._nats.subscribe(subject, {queue: group}, async (message, reply, subject) => {
             try {
-                const result = await done(JSON.parse(message));
+                const result = await done(JSON.parse(message),subject);
                 this._respond(null, reply, result);
             } catch (error) {
                 this._respond(error, reply);
