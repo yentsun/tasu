@@ -25,7 +25,7 @@ Usage
 Create an instance of the transport:
 
 ```js
-const Tasuu = require('tasu');
+import Tasuu from 'tasu';
 
 async function main()  {
     ...
