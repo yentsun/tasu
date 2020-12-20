@@ -29,7 +29,7 @@ import Tasuu from 'tasu';
 
 async function main()  {
     ...
-    const tasu = new Tasuu({group: 'some-service', ...});
+    const tasu = new Tasuu({ group: 'some-service', ...});
     await tasu.connected();
 }
 
@@ -39,7 +39,7 @@ async function main()  {
 Publish a request and get a response via `tasu.request()` on one end:
 
 ```js
-const {bar} = await tasu.request('foo', {arg: 1});
+const { bar } = await tasu.request('foo', { rg: 1 });
 ```
 _Note: this method uses `requestOne` inside, no need to worry about max  
 responses_ 
@@ -48,9 +48,9 @@ responses_
 Subscribe and respond to a request on the other:
 
 ```js
-tasu.listen('foo', async ({arg}, respond) => {
+tasu.listen('foo', async ({ arg }, respond) => {
     const bar = await someDatabaseCall(arg);
-    return {bar};
+    return { bar };
 });
 ```
 
